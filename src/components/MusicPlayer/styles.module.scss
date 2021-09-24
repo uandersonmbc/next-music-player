@@ -1,0 +1,32 @@
+.musicPlayer {
+  position: relative;
+
+  .progressBar {
+    background-color: #535353;
+    height: 5px;
+    width: 500px;
+    border-radius: 2.5px;
+
+    .loaded {
+      position: relative;
+      background-color: #b3b3b3;
+      height: 5px;
+      width: 50%;
+      border-radius: 2.5px;
+    }
+
+    .loaded:hover {
+      background-color: #1db954;
+      .pointer {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 15px;
+        height: 15px;
+        background-color: #b3b3b3;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    }
+  }
+}
