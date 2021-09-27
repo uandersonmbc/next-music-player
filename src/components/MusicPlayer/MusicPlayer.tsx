@@ -1,12 +1,14 @@
 import { MusicPlayerProps } from './types';
 
 import styles from './styles.module.scss';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
+import { IoMdPlay } from "react-icons/io";
 
 function MusicPlayer({ songs }: MusicPlayerProps) {
   const currentTime: any = useRef();
   const audio: any = useRef(null);
+  const [musicTime, setMusicTime] = useState(0);
 
   useEffect(() => {
     audio.current = new Audio();
@@ -19,6 +21,7 @@ function MusicPlayer({ songs }: MusicPlayerProps) {
     audio.current.addEventListener('play', () => {
       currentTime.current = setInterval(() => {
         console.log('intervalo', audio.current.currentTime);
+        setMusicTime(audio.current.currentTime)
       }, 1000);
       console.log('play');
     });
@@ -32,6 +35,7 @@ function MusicPlayer({ songs }: MusicPlayerProps) {
     });
 
     audio.current.addEventListener('error', () => {
+      currentTime.current && clearInterval(currentTime.current);
       console.log('erro');
     });
 
@@ -50,25 +54,46 @@ function MusicPlayer({ songs }: MusicPlayerProps) {
   }
 
   function play() {
-    audio.play();
+    if(audio.current){
+      audio.play();
+    }
   }
 
   function pause() {
-    audio.pause();
+    if(audio.current){
+      audio.pause();
+    }
+  }
+
+  function changeRange(e: any) {
+    if(currentTime.current){
+      clearInterval(currentTime.current)
+    }
+
+    setMusicTime(e.target.value);
   }
 
   return (
     <div className={styles.musicPlayer}>
-      <div>
-        <button onClick={() => add(songs[0])}>1</button>
-        <button onClick={() => add(songs[1])}>2</button>
-        <button onClick={() => add(songs[2])}>3</button>
-        <button onClick={() => add(songs[3])}>4</button>
-        <button onClick={() => add(songs[4])}>5</button>
+      <div className={styles.musicActions}>
+        <button className={styles.buttonSort} onClick={() => add(songs[0])}><IoMdPlay/></button>
+        <button className={styles.buttonPrev} onClick={() => add(songs[1])}><IoMdPlay/></button>
+        <button className={styles.buttonPlay} onClick={() => add(songs[2])}><IoMdPlay/></button>
+        <button className={styles.buttonNext} onClick={() => add(songs[3])}><IoMdPlay /></button>
+        <button className={styles.buttonRepeat}><IoMdPlay/></button>
       </div>
-      <div>
+      <div className={styles.musicProgress}>
         <span>3:09</span>
-        <input type='range' min={1} max={100} value={60.9} onChange={() => {}} />
+        <input 
+          className={styles.progressBar}
+          type='range'
+          min={1}
+          max={audio.current?.duration||100}
+          value={musicTime}
+          onChange={(e) => changeRange(e)}
+          onTransitionEnd={() => console.log('finished')}
+          // onMouseOver={() => changeRange()}
+        />
         <span>3:47</span>
       </div>
     </div>
